@@ -1,0 +1,26 @@
+version: "3"
+services:
+  cloud-disk:
+    container_name: cloud-disk-prod
+    image: registry.cn-hangzhou.aliyuncs.com/wqer1019/cloud-disk:latest
+    networks:
+      - app_net
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    depends_on:
+      - cloud-disk-worker
+
+  cloud-disk-worker:
+    container_name: cloud-disk-worker-prod
+    image: registry.cn-hangzhou.aliyuncs.com/wqer1019/cloud-disk_worker:latest
+    networks:
+      - app_net
+    env_file:
+      - .env
+
+networks:
+  app_net:
+    external:
+      name: app_net
