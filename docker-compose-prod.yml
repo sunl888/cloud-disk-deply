@@ -1,0 +1,57 @@
+version: "3"
+services:
+  cloud-disk:
+    container_name: cloud-disk-prod
+    image: registry.cn-hangzhou.aliyuncs.com/wqer1019/cloud-disk:latest
+    networks:
+      - app_net
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    depends_on:
+      - cloud-disk-worker
+      - imageproxy
+
+  cloud-disk-worker:
+    container_name: cloud-disk-worker-prod
+    image: registry.cn-hangzhou.aliyuncs.com/wqer1019/cloud-disk_worker:latest
+    networks:
+      - app_net
+    env_file:
+      - .env
+
+  imageproxy:
+    image: willnorris/imageproxy
+    entrypoint:
+      - /go/bin/imageproxy
+      - -addr
+      - 0.0.0.0:8080
+      - -baseURL
+      - http://minio:9000
+      - -cache
+      - memory:200:4h
+    ports:
+      - 9001:8080
+    networks:
+      - app_net
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio
+    volumes:
+      - ./data:/export
+    environment:
+      MINIO_ACCESS_KEY: zm2018
+      MINIO_SECRET_KEY: zhiming2018
+    command: server /export
+    networks:
+      - app_net
+    ports:
+      - 9000:9000
+
+networks:
+  app_net:
+    external:
+      name: app_net

@@ -4,6 +4,7 @@
 - Minio
 - Mysql (phpMyAdmin)
 - Redis (mini-redisadmin)
+- 以上依赖可以使用 https://github.com/wq1019/docker-basic-configure 来快速配置
 
 ## 安装
 - 打开phpMyAdmin  创建数据库 `cloud` 字符集为 `utf8mb4_general_ci`
