@@ -20,6 +20,22 @@ services:
     env_file:
       - .env
 
+  imageproxy:
+    restart: always
+    image: willnorris/imageproxy
+    entrypoint:
+      - /go/bin/imageproxy
+      - -addr
+      - 0.0.0.0:8080
+      - -baseURL
+      - https://zm-cloud.nos-eastchina1.126.net
+      - -cache
+      - memory:200:4h
+    ports:
+      - "9988:8080"
+    networks:
+      - app_net
+
 networks:
   app_net:
     external:
